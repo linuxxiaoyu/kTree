@@ -2,47 +2,190 @@
 
 ## 数据库
 
-### 关系型数据库
+DataBase System
+数据库系统
 
-- MySQL
+### ER图
 
-	- 锁
+Entity Relationship Diagram
+实体 - 关系图
 
-		- 行锁
-		- 表锁
-		- MDL
+### SQL
 
-	- 事务
+结构化查询语言
 
-		- 读未提交
-		- 读已提交
-		- 可重复读
-		- 串行化
+- DDL
 
-	- Log
+  Data Definition Language
+  数据定义语言
+  
+  用来定义数据库对象，包括数据库、数据表和列。
+  使用DDL可以创建、删除和修改数据库和表结构。
 
-		- Redo Log
-		- Bin Log
+- DML
 
-	- ReadView
-	- 优化
+  Data Manipulation Language
+  数据操作语言
+  
+  用于操作和数据库相关的记录，如增加、删除、修改数据表中的记录。
 
-- sqlite3
-- Oracle
-- PostgreSQL
+- DCL
 
-### NoSQL
+  Data Control Language
+  数据控制语言
+  
+  用于定义访问权限和安全级别
 
-- redis
+- DQL
 
-	- 类型
+  Data Query Language
+  数据查询语言
+  
+  用于查询想要的记录。
 
-		- list
-		- string
-		- set
-		- zset
+### DBS
 
-- mongoDB
+DBS英文是DataBase System，数据库系统。它是更大的概念，包括了数据库和数据库管理系统，以及数据库管理人员DBA。
+
+- DBA
+
+  数据库管理人员
+
+- DBMS
+
+  DBMS的英语全称是DataBase Management System，数据库管理系统。
+  实际上它是对多个数据库的管理。
+  DBMS = 多个数据库(DB) + 管理程序。
+
+	- DB
+
+	  DB的英文是DataBase，也就是数据库，它是存储数据的集合，可以理解为多个数据表。
+
+	- 关系型数据库
+
+		- MySQL
+
+			- SQL执行流程
+
+				- 主要层次
+
+					- 连接层
+
+						- 客户端和server建立连接，客户端发送SQL至server
+
+					- SQL层
+
+						- 对SQL语句进行查询处理
+
+					- 存储引擎层
+
+						- 负责数据的存储和读取，是与数据库文件打交道
+
+				- 主要流程
+
+					- 解析器
+					- 优化器
+					- 执行器
+					- 查询缓存
+
+						- 8.0之前的版本提供
+
+			- 锁
+
+				- 行锁
+				- 表锁
+				- MDL
+
+			- 事务
+
+				- 读未提交
+				- 读已提交
+				- 可重复读
+				- 串行化
+
+			- Log
+
+				- Redo Log
+				- Bin Log
+
+			- ReadView
+			- 优化
+			- 存储引擎
+
+				- InnoDB
+				- MyISAM
+				- Memory
+				- NDB
+				- Archive
+
+			- 分析
+
+				- profile
+
+					- 分析资源使用情况
+
+		- sqlite3
+		- Oracle
+
+			- SQL执行流程
+
+				- 语法检查
+				- 语义检查
+				- 权限检查
+				- 共享池检查
+				- 优化器
+				- 执行器
+
+			- 共享池
+
+				- 库缓存
+				- 数据字典缓冲区
+
+			- 软解析
+
+				- 在共享池中，首先对SQL语句进行Hash运算，然后根据Hash值在库缓存中查找，如果存在SQL语句的执行计划，就直接拿来执行。也就是直接进入到执行器的环节。
+
+			- 硬解析
+
+				- 如果没有知道SQL语句和执行计划，就需要自己来创建解析树进行解析，生成执行计划。对应的是优化器这个步骤。
+
+		- PostgreSQL
+		- SQL Server
+		- Access
+		- MariaDB
+		- DB2
+		- Hive
+
+	- NoSQL
+
+	  NoSQL泛指非关系型数据库。
+
+		- 键值型
+
+			- redis
+
+				- 类型
+
+					- list
+					- string
+					- set
+					- zset
+
+		- 文档型
+
+			- mongoDB
+
+		- 搜索引擎
+
+			- Elasticsearch
+			- Splunk
+			- Solr
+
+		- 列存储
+
+			- HBase
+
+		- 图形数据库
 
 ## 消息队列
 
@@ -433,11 +576,15 @@ socket
 		  B 收到之后大声回答：“我收到你的口令 j 并准备好了，你准备好了吗？我的口令是 k。”
 		  A 收到之后也大声回答：“我收到你的口令 k 并准备好了，我们开始吧。”
 
+			- 图示
+
 		- 四次挥手
 
 		  TCP连接终止时，主机1先发送FIN报文，主机2进入CLOSE_WAIT状态，先发送一个ACK应答，同时，主机2通过read调用获取EOF，并将此结果通知应用程序进行主动关闭操作，发送FIN报文。主机1在接收到FIN报文后发送ACK应答，此时主机1进入TIME_WAIT状态。
 		  
 		  主机1在TIME_WAIT停留持续时间是固定的，是最长分节生命期MSL（maximum segment lifetime）的两倍，一般称为2MSL。Linux系统里有一个硬编码的字段，名称为TCP_TIMEWAIT_LEN，其值为60秒。也就是说，Linux系统停留在TIME_WAIT的时间为固定的60秒。
+
+			- 图示
 
 		- TIME_WAIT
 
@@ -490,17 +637,6 @@ socket
 			- shutdown
 
 			  在期望关闭连接其中一个方向时，应该使用 shutdown 函数。
-
-			- 对比
-
-			  客户端调用close函数关闭了整个连接，当服务器端发送“Hi, data1”时，客户端给服务器端回送了一个RST分组；服务器端再次尝试发送"Hi, data2"时，系统内核通知SIGPIPE信号。这是因为，在RST的套接字进行写操作，会直接出发SIGPIPE信号。需要对SIGPIPE信号进行处理，来避免程序莫名退出：
-			  ```c
-			  static void sig_pipe(int signo) {
-			    printf("\nreceived %d datagrams\n", count);
-			    exit(0);
-			  }
-			  signal(SIGINT, sig_pipe);
-			  ```
 
 		- Keep-Alive
 
@@ -773,6 +909,97 @@ SOCK_DGRAM
 	- DELETE
 	- PUT
 	- PATCH
+
+### I/O
+
+- I/O多路复用
+
+	- select
+
+		- 描述符基数是当前最大描述符+1
+		- 每次select调用完成后，要重置待测试集合
+
+	- poll
+
+		- 和select相比，突破了文件描述符的个数限制
+
+	- epoll
+
+		- 条件触发 level-triggered
+
+			- 只要满足事件的条件，就一直不断的把这个事件传递给用户
+
+		- 边缘触发 edge-triggered
+
+			- 只有第一次满足条件的时候才触发，之后就不会再传递同样的事件了
+
+		- 优点
+
+			- epoll维护了一棵红黑树来跟踪所有待检测的文件描述符，红黑树的使用减少了内核和用户空间大量的数据拷贝和内存分配，大大提高了性能。
+			- epoll维护了一个链表来记录就绪事件，内核在每个文件有事件发生时将自己登记到这个就绪事件列表中，通过内核自身的回调和唤醒机制，减少了对内核描述符的遍历，大大加速了事件通知和检测的效率，这也为level-triggered和edge-triggered的实现带来了便利。
+
+		- epoll通过改进的接口设计，避免了用户态-内核态频繁的数据拷贝，大大提高了系统性能。
+
+	- 最佳实践：epoll + 非阻塞I/O
+
+- 异步I/O
+- 非阻塞I/O
+
+	- 非阻塞I/O可以使用在read、write、accept、connect等多种不同的场景，在非阻塞I/O下，使用轮询的方式引起CPU占用率高，所以一般将非阻塞I/O和I/O多路复用基数select、poll等搭配使用，在非阻塞I/O事件发生时，再调用对应事件的处理函数。这种方式，极大的提高了程序的健壮性和稳定性，是Linux下高性能网络编程的首选
+
+### 并发
+
+- fork
+
+	- 使用阻塞I/O和进程模型，为每个链接创建一个独立的子进程来进行服务，是一个非常简单有效的实现方式，这种方式很难满足高性能程序的需求，但好处在于实现简单。
+
+		- 要注意对套接字的关闭梳理
+		- 要注意对子进程进行回收，避免产生不必要的僵尸进程
+
+	- 示例图
+
+		- 
+
+- pthread
+
+	- 方式
+
+		- 每次动态创建线程
+		- 使用线程池提高效率
+
+	- 示例图
+
+		- 
+
+- 反应堆模型 reactor
+
+	- 单reactor线程
+
+		- 常规
+
+			- 图示
+
+				- 
+
+		- + worker threads
+
+			- 图示
+
+				- 
+
+	- 主 - 从reactor
+
+		- 常规
+
+			- 图示
+
+				- 
+
+		- + worker threads
+
+			- 图示
+
+				- 
 
 ### 分析工具
 
